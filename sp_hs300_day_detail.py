@@ -1,4 +1,4 @@
-#coding : utf-8
+﻿#coding : utf-8
 from util import *
 import demjson,datetime 
 
@@ -6,11 +6,6 @@ import demjson,datetime
 mongodb_collection = DB.hs300_day_detail
 
 url_template = 'http://market.finance.sina.com.cn/downxls.php?date=%s&symbol=%s'
-
-def spider_day_detail(stock_name,date):
-    url = url_template%(date,stock_name)
-    data = http_spider(url)
-    return data.decode('gbk')
 
 def handle_day_detail_data(stock_name,date,data):
     lines = data.split('\n')
@@ -45,9 +40,18 @@ def handle_day_detail_data(stock_name,date,data):
                             'date':data_object['date'],
                             'time':data_object['time']}
         #update !
-        mongodb_update(mongodb_collection, update_condition, data_object)        
+        mongodb_update(mongodb_collection, update_condition, data_object)
         
+def spider_day_detail(stock_name,date):
+    url = url_template%(date,stock_name)
+    data = http_spider(url)
+    data = data.decode('gbk')
+    try:
+        handle_day_detail_data(stock_name, date, data)
+    except Exception, err:
+        print 'spider_day_detail ERROR!'
+        print 'URL = %s' % url
+        raise err
 
 if __name__ == "__main__":
     data = spider_day_detail('sh600188', '2014-06-18')
-    handle_day_detail_data('sh600188', '2014-06-18',data)

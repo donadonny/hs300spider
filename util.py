@@ -1,12 +1,12 @@
-# coding : utf-8
+﻿# coding : utf-8
 
 import urllib2
-from pymongo import MongoClient
+from pymongo import MongoClient,DESCENDING
 
 DBClient = MongoClient('mongodb://localhost:27017/')
 DB = DBClient.hs300
 DT_FMT = '%Y-%m-%d %H:%M:%S %Z'
-
+DT_FMT_SHORT = '%Y-%m-%d'
 def http_spider(url):
     print 'Spider URL:',url
     fd = urllib2.urlopen(url)
@@ -19,13 +19,17 @@ def http_spider(url):
     return content   
 
 
-def mongodb_update(mongodb_collection, update_condition, data_object):
+def mongodb_update(mongodb_collection, update_condition, data_object,debug=False):
     res = mongodb_collection.find_one(update_condition)
     if res:
         data_object['_id'] = res['_id']
         mongodb_collection.save(data_object)
+        if debug:
+            print 'UPDATE ID = ', res['_id']
     else:
-        mongodb_collection.insert(data_object)
+        id = mongodb_collection.insert(data_object)
+        if debug:
+            print 'Insert ID = ', id
     pass
 
 
@@ -56,5 +60,17 @@ def html_extract(html,keyTag,position=0):
     return (html[p1:p2],p2)
     
 
+def hs300_list():
+    mongodb_collection = DB.hs300_list
+    records = mongodb_collection.find().sort([("_update_time_", DESCENDING)])
+    return [records[i]['stock_name']for i in range(300)]
+
+def hs300_last_trade_day(count=10):
+    mongodb_collection = DB.hs300_trade_day
+    records = mongodb_collection.find().sort([("_update_time_", DESCENDING),("date", DESCENDING)])
+    return [records[i]['date']for i in range(count)]    
+        
 if __name__ == "__main__":
     print '->',html_extract('<tr><td>xx:</td><td>6.64</td></tr>', 'xx:</td><td>')
+    print hs300_list()
+    print hs300_last_trade_day()
