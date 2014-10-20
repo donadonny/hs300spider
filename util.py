@@ -1,13 +1,16 @@
 ﻿# coding : utf-8
 
-import urllib2
+import urllib2,time
 from pymongo import MongoClient,DESCENDING
 
 DBClient = MongoClient('mongodb://localhost:27017/')
 DB = DBClient.hs300
 DT_FMT = '%Y-%m-%d %H:%M:%S %Z'
 DT_FMT_SHORT = '%Y-%m-%d'
-def http_spider(url):
+def http_spider(url,sleep=True):
+    if sleep:
+        time.sleep(0.01)
+        
     print 'Spider URL:',url
     fd = urllib2.urlopen(url)
         
@@ -68,7 +71,10 @@ def hs300_list():
 def hs300_last_trade_day(count=10):
     mongodb_collection = DB.hs300_trade_day
     records = mongodb_collection.find().sort([("_update_time_", DESCENDING),("date", DESCENDING)])
-    return [records[i]['date']for i in range(count)]    
+    return [records[i]['date']for i in range(count)]
+
+def day_range(year,month,day,range):
+    pass
         
 if __name__ == "__main__":
     print '->',html_extract('<tr><td>xx:</td><td>6.64</td></tr>', 'xx:</td><td>')

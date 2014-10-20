@@ -44,6 +44,7 @@ def spider_day_summary(stock_name,date):
     except Exception,err:
         print 'spider_day_summary ERROR!'
         print 'URL = %s' % url
+        print 'ERROR :', err
         raise err
 
 if __name__ == "__main__":

@@ -17,7 +17,7 @@ def handle_day_detail_data(stock_name,date,data):
     
     line_count = len(lines)-1
     for i in range(1,len(lines)):
-        if i%50==0:
+        if i%100==0:
             print '-- %d of %d lines completed.'%(i,line_count)
         line = lines[i]
         cells = line.split('\t')
@@ -51,6 +51,7 @@ def spider_day_detail(stock_name,date):
     except Exception, err:
         print 'spider_day_detail ERROR!'
         print 'URL = %s' % url
+        print 'ERROR :', err
         raise err
 
 if __name__ == "__main__":
