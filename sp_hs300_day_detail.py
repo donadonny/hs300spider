@@ -17,7 +17,7 @@ def handle_day_detail_data(stock_name,date,data):
     
     line_count = len(lines)-1
     for i in range(1,len(lines)):
-        if i%100==0:
+        if i%500==0:
             print '-- %d of %d lines completed.'%(i,line_count)
         line = lines[i]
         cells = line.split('\t')

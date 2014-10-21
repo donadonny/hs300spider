@@ -31,7 +31,7 @@ def handle_day_summary_data(stock_name,date,html):
     update_condition = {"stock_name":data_object['stock_name'],
                             'date':data_object['date']}
     #update !
-    print data_object
+    #print data_object
     mongodb_update(mongodb_collection, update_condition, data_object)
 
 def spider_day_summary(stock_name,date):
