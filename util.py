@@ -7,19 +7,27 @@ DBClient = MongoClient('mongodb://localhost:27017/')
 DB = DBClient.hs300
 DT_FMT = '%Y-%m-%d %H:%M:%S %Z'
 DT_FMT_SHORT = '%Y-%m-%d'
-def http_spider(url,sleep=True):
-    if sleep:
-        time.sleep(0.01)
-        
-    print 'Spider URL:',url
-    fd = urllib2.urlopen(url)
-        
-    content = ''
+def http_spider(url,retry_count=5):
+    def http_request():
+        print 'Spider URL:',url
+        fd = urllib2.urlopen(url)
+            
+        content = ''
+        while True:
+            d = fd.read()
+            if d: content+=d
+            else:break
+        return content
+    t = 0.01
     while True:
-        d = fd.read()
-        if d: content+=d
-        else:break
-    return content   
+        try:
+            return http_request()
+        except Exception,err:
+            retry_count -= 1
+            if retry_count==0:
+                raise err
+            time.sleep(t)
+            t*=2
 
 
 def mongodb_update(mongodb_collection, update_condition, data_object,debug=False):
