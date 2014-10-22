@@ -7,7 +7,7 @@ import datetime
 
 mongodb_coll_summary = DB.hs300_day_summary
 mongodb_coll_details = DB.hs300_day_detail
-
+mongodb_coll_details = DB.hs300_day_detail_stat
 def bool2int(b):
     if b:return 1
     else:return -1
@@ -30,7 +30,24 @@ def generate_oneday_feature(day_index,date,stock_name):
          res["high_price"]-res["open_price"],
          int(res["volume"]/10000),
          int(res["amount"]/10000)]
-    return f
+    res2 = mongodb_coll_details.find_one(query)
+    if not res:return None
+    f2 = [
+        res2["ACC_COUNT"],
+        res2["ACC_AVG_PRICE"],
+        res2["ACC_PD_COUNT_1"],
+        res2["ACC_PD_COUNT_2"],
+        res2["ACC_PD_COUNT_3"],
+        res2["ACC_AVG_VOL"],
+        res2["ACC_VAR_VOL"],
+        res2["ACC_MAX_VOL"],
+        res2["ACC_MIN_VOL"],
+        res2["ACC_AVG_AMT"],
+        res2["ACC_VAR_AMT"],
+        res2["ACC_MAX_AMT"],
+        res2["ACC_MIN_AMT"],
+    ] 
+    return f + f2
 
 def generate_feature(stock_name,x_days):
     feature = []
