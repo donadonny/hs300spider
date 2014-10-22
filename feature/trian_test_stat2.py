@@ -21,7 +21,7 @@ def split_data_2_train_test(data_path,train_data_path,test_data_path):
     fd_test.flush()
     fd_train.flush()
 
-cmd_template = "d:\\libFM.exe -task r -train %s -test %s -dim '1,1,20' -iter 100 -method als -regular '0,0,10' -init_stdev 0.1 -out %s"
+cmd_template = "d:\\libFM.exe -task r -train %s -test %s -dim '1,5,18' -iter 50 -method als -regular '0,2,10' -init_stdev 0.1 -out %s"
 def train(train_data_path,test_data_path,predict_out_path):
     cmd = cmd_template%(train_data_path,test_data_path,predict_out_path)
     returnCode = subprocess.call(cmd)  
@@ -48,20 +48,20 @@ def stat(predict_out_path,test_data_path):
         else:return -1
         
     def loss(y_hat,y):
-        return bool2int(y_hat*y>0) * abs(y) *0.01
+        return bool2int((y_hat*y)>0) * abs(y)
     
 
         
     lossA= [loss(1,y[i]) for i in range(len(y))]
     lossB = [loss(y_hat[i],y[i]) for i in range(len(y))]
     lossC= [loss(random.randint(-10,10),y[i]) for i in range(len(y))]
-    
+    cost = len(y)*100
     print '--------------------------------'
     for i in range(len(y)):
         print y[i],y_hat[i]
     
     print 'Predict stock count:',len(y)
-    return sum(lossA),sum(lossB),sum(lossC)
+    return sum(lossA),sum(lossB),sum(lossC),cost
 
 lock = threading.Lock() 
 
@@ -97,7 +97,7 @@ def g_data():
     g.generate_data(fd_train,fd_test,fd_y,y_day)
     
 def one_pass():
-    N=5
+    N=10
     threads = []
     #g_data()
     for i in range(N):
@@ -107,12 +107,18 @@ def one_pass():
     for i in range(N):
         threads[i].join()
     
-    (a,b,c)=(0,0,0)
+    print '------------------------------------------------'
+    (a,b,c,cost)=(0,0,0,0)
+    
     for i in range(N):
         a += r[i][0]
         b += r[i][1]
         c += r[i][2]
-    print a/N,b/N,c/N
+        cost += r[i][3]
+        print r[i][0],r[i][1],r[i][2],r[i][3]
+        
+    print cost,len(r)
+    print a*100*200/cost,b*100*200/cost,c*100*200/cost
         
 if __name__ == "__main__":
     one_pass()
