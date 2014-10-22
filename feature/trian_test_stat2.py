@@ -21,7 +21,7 @@ def split_data_2_train_test(data_path,train_data_path,test_data_path):
     fd_test.flush()
     fd_train.flush()
 
-cmd_template = "d:\\libFM.exe -task r -train %s -test %s -dim '1,5,18' -iter 50 -method als -regular '0,2,10' -init_stdev 0.1 -out %s"
+cmd_template = "d:\\stock_data\\libFM.exe -task r -train %s -test %s -dim '1,1,8' -iter 300 -method als -regular '0,0,10' -init_stdev 0.1 -out %s"
 def train(train_data_path,test_data_path,predict_out_path):
     cmd = cmd_template%(train_data_path,test_data_path,predict_out_path)
     returnCode = subprocess.call(cmd)  
@@ -41,7 +41,7 @@ def stat(predict_out_path,test_data_path):
     for ln in fd_test:
         y_hat.append(float(ln[:-1]))
         
-    print len(y),len(y_hat)
+    #print len(y),len(y_hat)
     
     def bool2int(b):
         if b:return 1
@@ -58,7 +58,8 @@ def stat(predict_out_path,test_data_path):
     cost = len(y)*100
     print '--------------------------------'
     for i in range(len(y)):
-        print y[i],y_hat[i]
+        #print y[i],y_hat[i]
+        pass
     
     print 'Predict stock count:',len(y)
     return sum(lossA),sum(lossB),sum(lossC),cost
@@ -87,17 +88,11 @@ def thread_entry_wrapper(thread_id):
 tmp_train_data_path = 'd:\\stock_data\\tmp\\train_data_%d.txt'
 tmp_test_data_path = 'd:\\stock_data\\tmp\\test_data_%d.txt'
 tmp_predict_out_path='d:\\stock_data\\tmp\\predict_out_%d.txt'
-data_path = 'd:\\stock_data\\1.txt'
+data_path = 'd:\\stock_data\\stock_data.txt'
 
-
-def g_data():
-    y_day = datetime.date(2014,10,19)   
-    
-    fd_y = open("d:\\stock_label_y.txt",'w')
-    g.generate_data(fd_train,fd_test,fd_y,y_day)
     
 def one_pass():
-    N=10
+    N=12
     threads = []
     #g_data()
     for i in range(N):

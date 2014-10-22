@@ -30,9 +30,6 @@ def generate_oneday_feature(day_index,date,stock_name):
          res["high_price"]-res["open_price"],
          int(res["volume"]/10000),
          int(res["amount"]/10000)]
-    for item in f:
-        if not item:
-            return None
     return f
 
 def generate_feature(stock_name,x_days):
@@ -46,4 +43,4 @@ def generate_feature(stock_name,x_days):
     return feature
 
 if __name__ == "__main__":
-    print generate_feature('sz000401', ['2014-06-06','2014-06-09'])
+    print generate_feature('sh601989', ['2014-07-18'])

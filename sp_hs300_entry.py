@@ -33,8 +33,8 @@ def spider_entry():
     print 'last_trade_days = ',last_trade_days
     
     trade_day_set = set(last_trade_days)
-    D = datetime.date(2014,8,13)
-    N = 30
+    D = datetime.date(2014,6,18)
+    N = 40
     oneday = datetime.timedelta(days=1)
     for i in range(N):
         D -= oneday

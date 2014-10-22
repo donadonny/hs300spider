@@ -37,42 +37,33 @@ def generate_xy_days(y_day,x_range):
     return (x_days,y_day_fmt)
 
 
-def generate_single_data(fd_train,fd_test,fd_y,stock_name,x_days,yday):
+def generate_single_data(fd,stock_name,x_days,yday):
     feature = x_features.generate_feature(stock_name,x_days)
     ylabel = y_label.generate_ylabel(stock_name,yday)
     if not feature or not ylabel:return
     if ylabel>10 or ylabel<-10:return
-    
-    rand = random.randint(0,9)
-    fd = fd_train
-    if rand ==0:
-        fd = fd_test
-    
+        
     fd.write('%f'%ylabel)
     for i in range(len(feature)):
         fd.write(' %d:%s'%(i,str(feature[i])))
     fd.write('\n')
     fd.flush()
-    
-    if rand ==0:
-        fd_y.write('%s\n'%str(ylabel))
+
     return ylabel
 
-def generate_data(fd_train,fd_test,fd_y,y_day,date_range=50):
+def generate_data(fd,y_day,date_range=50):
     hs_300list = hs300_list()
     oneday = datetime.timedelta(days=1)
     for i in range(date_range):
-        (x_days,y_day_fmt)= generate_xy_days(y_day, 7)
+        (x_days,y_day_fmt)= generate_xy_days(y_day, 3)
         y_day -= oneday
         if not x_days or not y_day_fmt:
             continue
         for stock_name in hs_300list:
-            generate_single_data(fd_train,fd_test,fd_y, stock_name, x_days, y_day_fmt)
+            generate_single_data(fd, stock_name, x_days, y_day_fmt)
 
 if __name__ == "__main__":
     y_day = datetime.date(2014,10,19)   
-    fd_train = open("d:\\stock_train.txt",'w')
-    fd_test = open("d:\\stock_test.txt",'w')
-    fd_y = open("d:\\stock_label_y.txt",'w')
-    generate_data(fd_train,fd_test,fd_y,y_day)
+    fd = open("d:\\stock_data\\data.txt",'w')
+    generate_data(fd,y_day,date_range=90)
     pass
