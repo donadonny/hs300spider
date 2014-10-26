@@ -7,7 +7,7 @@ from util import *
 import datetime,random
 import feature_generation_entry as fge
 import threading, time 
-import ttp
+import ttp,stgy
 
 
 model_file = 'd:\\stock_data\\GBDT_MODEL'
@@ -23,7 +23,7 @@ def train_model(yday):
     #生成训练\测试数据
     fd = open(orign_data,'w')
     labelFD = open(orign_label_data,'w')
-    fge.generate_data(fd,y_day,date_range=90,labelFD=labelFD)
+    fge.generate_data(fd,yday,date_range=10,labelFD=labelFD)
     
     #规则化数据
     ttp.normalize_data(orign_data, norm_data, norm_rules,restore=False)
@@ -140,7 +140,10 @@ def report(yday):
     assert(len(y)==len(y_hat))
     for i in range(len(y)):
         y[i].append(y_hat[i])
+    y = sorted(y, cmp=lambda x,y:cmp(x[3],y[3]),reverse=True)
     generator_html(yday,y)
+    #返回不同策略在这一天的损失
+    return [stgy.stgy_all(y),stgy.stg_random(y),stgy.stgy_top1(y),stgy.stgy_top3(y),stgy.stgy_top5(y)]
     
 def generator_html_index(yday_list):
     def render_html():
@@ -151,20 +154,39 @@ def generator_html_index(yday_list):
     html_file  ='d:\\stock_data\\report\\index.html'
     open(html_file,'w').write(render_html())    
     
+
+
+
 if __name__ == "__main__":
-    y_day = datetime.date(2014,10,10)    
-    #train_model(y_day)    
     oneday = datetime.timedelta(days=1)
     y_day_list=[]
-    
-    tday = set(hs300_last_trade_day(count = 30))
-    for i in range(15):
-        y_day +=oneday
+    gain_loss_list=[]
+    tday = set(hs300_last_trade_day(count = 90))
+    y_day = datetime.date(2014,10,24)    
+    for i in range(60):
+        y_day_1 = y_day-oneday
         y_day_fmt = y_day.strftime(DT_FMT_SHORT)
+        print y_day_1
+        #exit(1)
+    
         if not y_day_fmt in tday:
+            y_day -=oneday
             continue
+        
+        train_model(y_day_1)
         y_day_list.append(y_day_fmt)
         predict(y_day)
-        report(y_day_fmt)
+        gain_loss = report(y_day_fmt)
+        gain_loss_list.append(gain_loss)
+        # one again
+        y_day -= oneday        
     
     generator_html_index(y_day_list)
+    print '--------------------------'
+    t_gain_loss = [0,0,0,0,0]
+    for i in gain_loss_list:
+        print i
+        for j in range(5):
+           t_gain_loss[j]+=i[j]
+    print '--------------------------'
+    print t_gain_loss
