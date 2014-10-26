@@ -104,8 +104,8 @@ def detail_stat_entry():
     print 'last_trade_days = ',last_trade_days
     
     trade_day_set = set(last_trade_days)
-    D = datetime.date(2014,6,20)
-    N = 4
+    D = datetime.date(2014,10,25)
+    N = 15
     oneday = datetime.timedelta(days=1)
     for i in range(N):
         D -= oneday

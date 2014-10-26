@@ -29,11 +29,11 @@ def spider_entry():
     #spider_hs300_list()
     
     hs_300list = hs300_list()
-    last_trade_days = hs300_last_trade_day(count=90)
+    last_trade_days = hs300_last_trade_day(count=15)
     print 'last_trade_days = ',last_trade_days
     
     trade_day_set = set(last_trade_days)
-    D = datetime.date(2014,6,18)
+    D = datetime.date(2014,10,25)
     N = 40
     oneday = datetime.timedelta(days=1)
     for i in range(N):

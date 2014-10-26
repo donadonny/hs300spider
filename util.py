@@ -1,7 +1,7 @@
 ﻿# coding : utf-8
 
 import urllib2,time
-from pymongo import MongoClient,DESCENDING
+from pymongo import MongoClient,DESCENDING,ASCENDING 
 
 DBClient = MongoClient('mongodb://localhost:27017/')
 DB = DBClient.hs300
@@ -78,7 +78,7 @@ def hs300_list():
 
 def hs300_last_trade_day(count=10):
     mongodb_collection = DB.hs300_trade_day
-    records = mongodb_collection.find().sort([("_update_time_", DESCENDING),("date", DESCENDING)])
+    records = mongodb_collection.find().sort([("date", DESCENDING)])
     return [records[i]['date']for i in range(count)]
 
 def day_range(year,month,day,range):
