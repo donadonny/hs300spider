@@ -5,6 +5,7 @@ import demjson,datetime
 #table name
 mongodb_collection = DB.hs300_day_summary
 
+#http://hq.sinajs.cn/rn=1414488384754&list=sh600188,rt_hk01171,RMBHKD,sh122168,bk_
 url_template = 'http://vip.stock.finance.sina.com.cn/quotes_service/view/vMS_tradehistory.php?symbol=%s&date=%s'
 
 tags=['收盘价:<','涨跌幅:<','前收价:<','开盘价:<','最高价:<','最低价:<','成交量(手):<','成交额(千元):<']
