@@ -6,6 +6,7 @@ import demjson,datetime
 mongodb_collection = DB.hs300_trade_day
 
 url_template = 'http://market.finance.sina.com.cn/downxls.php?date=%s&symbol=sh600188'
+url_template2 = 'http://market.finance.sina.com.cn/downxls.php?date=%s&symbol=sh601398'
 
 
 def update_mongodb(date):
@@ -16,16 +17,21 @@ def update_mongodb(date):
     #update !
     mongodb_update(mongodb_collection, update_condition, data_object)      
     
+def is_trade_day(date):
+    data = http_spider(url_template%date)
+    data2 = http_spider(url_template2%date)
+    return len(data)>=1200 or len(data2)>=1200
+
 def spider_trade_day(range=30):
     today = datetime.datetime.now()
+    oneday = datetime.timedelta(days=1)
+    today += oneday
     n = 0
     while n < range:
-        oneday = datetime.timedelta(days=1)
         today -= oneday
         date = today.strftime(DT_FMT_SHORT)
-        url = url_template%date
-        data = http_spider(url)
-        if len(data) <= 1200:#not a trade day
+        
+        if not is_trade_day(date):
             pass
         else:#is trade day
             n+=1

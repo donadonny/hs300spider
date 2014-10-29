@@ -85,6 +85,5 @@ def day_range(year,month,day,range):
     pass
         
 if __name__ == "__main__":
-    print '->',html_extract('<tr><td>xx:</td><td>6.64</td></tr>', 'xx:</td><td>')
-    print hs300_list()
-    print hs300_last_trade_day()
+    #print hs300_list()
+    print hs300_last_trade_day(30)
