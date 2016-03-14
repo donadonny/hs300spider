@@ -22,7 +22,7 @@ def is_trade_day(date):
     data2 = http_spider(url_template2%date)
     return len(data)>=1200 or len(data2)>=1200
 
-def spider_trade_day(range=30):
+def spider_trade_day(range=300):
     today = datetime.datetime.now()
     oneday = datetime.timedelta(days=1)
     today += oneday
