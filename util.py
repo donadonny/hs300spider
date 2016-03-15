@@ -77,9 +77,11 @@ def html_extract(html,keyTag,position=0):
 
     
 
-def read_db(table,cond = None,desc = None):
+def read_db(table,cond = None,sort = None):
     mongodb_collection = getattr(DB,table)
-    records = mongodb_collection.find(cond).sort(desc)
+    records = mongodb_collection.find(cond)
+    if sort:
+        records = records.sort(sort)
     return records
 
 def hs300_list():
