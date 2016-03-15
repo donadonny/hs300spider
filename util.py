@@ -77,10 +77,17 @@ def hs300_list():
     return [records[i]['stock_name']for i in range(300)]
 
 def hs300_last_trade_day(count=10):
-    mongodb_collection = DB.hs300_trade_day
-    records = mongodb_collection.find().sort([("date", DESCENDING)])
-    return [records[i]['date']for i in range(count)]
-
+    import datetime
+    now = datetime.datetime.now()
+    oneday = datetime.timedelta(days = 1)
+    ds=[]
+    while len(ds)<count:
+        idx = int(now.strftime("%u"))
+        if idx>=1 and idx<=5:
+            ds.append(now.strftime("%Y-%m-%d"))
+        now -= oneday
+    return ds
+    
 def day_range(year,month,day,range):
     pass
         

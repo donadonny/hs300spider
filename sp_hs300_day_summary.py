@@ -31,7 +31,7 @@ def handle_day_summary_data(stock_name,date,html):
         data_object[keys[i]] = v
      
     if data_object["open_price"] < 0.0001:
-        print 'Invalid data, ignore'
+        print 'Invalid data, ignore @  %s, %s'%(stock_name,date)
         return
     update_condition = {"stock_name":data_object['stock_name'],
                             'date':data_object['date']}
@@ -47,10 +47,14 @@ def spider_day_summary(stock_name,date):
     try:
         handle_day_summary_data(stock_name, date, data)
     except Exception,err:
-        print 'spider_day_summary ERROR!'
-        print 'URL = %s' % url
+        print 'spider_day_summary ERROR! @ %s,  %s' %(stock_name,date)
+        #print 'URL = %s' % url
         print 'ERROR :', err
-        raise err
+        #raise err
 
 if __name__ == "__main__":
-    data = spider_day_summary('sh510900', '2016-03-13')
+    ds = hs300_last_trade_day(count = 600)
+    stocks = ['sh510050','sh510900']
+    for d in ds:
+        for s in stocks:
+            spider_day_summary(s,d)
