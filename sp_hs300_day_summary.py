@@ -27,8 +27,12 @@ def handle_day_summary_data(stock_name,date,html):
         (v,p) = html_extract(html, tags[i],position=p)
         #print v,p
         assert(v)
-        data_object[keys[i]] = float(v.replace('%',''))
-        
+	v = float(v.replace('%',''))
+        data_object[keys[i]] = v
+     
+    if data_object["open_price"] < 0.0001:
+        print 'Invalid data, ignore'
+        return
     update_condition = {"stock_name":data_object['stock_name'],
                             'date':data_object['date']}
     #update !
@@ -49,4 +53,4 @@ def spider_day_summary(stock_name,date):
         raise err
 
 if __name__ == "__main__":
-    data = spider_day_summary('sh600188', '2014-10-29')
+    data = spider_day_summary('sh510900', '2016-03-13')
