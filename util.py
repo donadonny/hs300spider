@@ -7,6 +7,9 @@ DBClient = MongoClient('mongodb://localhost:27017/')
 DB = DBClient.hs300
 DT_FMT = '%Y-%m-%d %H:%M:%S %Z'
 DT_FMT_SHORT = '%Y-%m-%d'
+
+DESC = DESCENDING
+AESC = ASCENDING
 def http_spider(url,retry_count=5):
     def http_request():
         print 'Spider URL:',url
@@ -71,19 +74,38 @@ def html_extract(html,keyTag,position=0):
     return (html[p1:p2],p2)
     
 
+
+    
+
+def read_db(table,cond = None,sort = None):
+    mongodb_collection = getattr(DB,table)
+    records = mongodb_collection.find(cond)
+    if sort:
+        records = records.sort(sort)
+    return records
+
 def hs300_list():
-    mongodb_collection = DB.hs300_list
-    records = mongodb_collection.find().sort([("_update_time_", DESCENDING)])
+    records = read_db("hs300_list",None,[("stock_name", DESC)])
     return [records[i]['stock_name']for i in range(300)]
-
+    
 def hs300_last_trade_day(count=10):
-    mongodb_collection = DB.hs300_trade_day
-    records = mongodb_collection.find().sort([("date", DESCENDING)])
-    return [records[i]['date']for i in range(count)]
+    import datetime
+    now = datetime.datetime.now()
+    oneday = datetime.timedelta(days = 1)
+    ds=[]
+    while len(ds)<count:
+        idx = int(now.strftime("%u"))
+        if idx>=1 and idx<=5:
+            ds.append(now.strftime("%Y-%m-%d"))
+        now -= oneday
+    return ds
+    
 
-def day_range(year,month,day,range):
-    pass
-        
+class Z:
+    def __init__(self):
+        pass
+    def x(self):
+        print self
+    
 if __name__ == "__main__":
-    #print hs300_list()
-    print hs300_last_trade_day(30)
+    print hs300_list()

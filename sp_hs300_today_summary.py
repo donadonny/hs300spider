@@ -42,8 +42,8 @@ def handle_today_summary_data(stock_name,date,html):
     #print data_object
     mongodb_update(mongodb_collection, update_condition, data_object)
 
-def spider_today_summary(stock_name):
-    date = get_today()
+
+def spider_summary(date, stock_name):
     print '-- spider_day_summary : stock_name=%s, date=%s'%(stock_name,date)
     url = url_template%(stock_name)
     data = http_spider(url)
@@ -55,6 +55,11 @@ def spider_today_summary(stock_name):
         print 'URL = %s' % url
         print 'ERROR :', err
         raise err
+
+def spider_today_summary(stock_name):
+    date = get_today()
+    return summary(date,stock_name)
+    
 
 if __name__ == "__main__":
     data = spider_today_summary('sh600188')
