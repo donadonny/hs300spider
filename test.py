@@ -2,6 +2,7 @@
 
 from util import *
 
+'''
 sort=[("date", AESC)]
 
 r1 = read_db('hs300_day_summary',cond={'stock_name':'sh510050'},sort = sort)
@@ -20,3 +21,10 @@ plt.figure()
 plt.plot(p1)
 plt.plot(p2)
 plt.show()
+'''
+
+
+x = {'a':1, 'b': 2}
+y = {'b':10, 'c': 11}
+x.update(y)
+print x,y

@@ -36,8 +36,10 @@ def http_spider(url,retry_count=5):
 def mongodb_update(mongodb_collection, update_condition, data_object,debug=False):
     res = mongodb_collection.find_one(update_condition)
     if res:
-        data_object['_id'] = res['_id']
+        #data_object['_id'] = res['_id']
+        data_object.update(res)
         mongodb_collection.save(data_object)
+        print res
         if debug:
             print 'UPDATE ID = ', res['_id']
     else:
@@ -98,14 +100,10 @@ def hs300_last_trade_day(count=10):
         if idx>=1 and idx<=5:
             ds.append(now.strftime("%Y-%m-%d"))
         now -= oneday
+    ds.sort()
     return ds
     
 
-class Z:
-    def __init__(self):
-        pass
-    def x(self):
-        print self
     
 if __name__ == "__main__":
-    print hs300_list()
+    print hs300_last_trade_day()
