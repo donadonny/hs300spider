@@ -46,7 +46,8 @@ def spider_day_summary(stock_name,date):
         print 'spider_day_summary ERROR!'
         print 'URL = %s' % url
         print 'ERROR :', err
-        raise err
 
 if __name__ == "__main__":
-    data = spider_day_summary('sh600188', '2014-10-29')
+    trade_days = hs300_last_trade_day(count = 360)
+    for day in trade_days:
+        data = spider_day_summary('sh600036', day)
