@@ -1,4 +1,4 @@
-﻿#coding : utf-8
+#coding : utf-8
 from util import *
 import demjson,datetime 
 
@@ -22,11 +22,8 @@ def is_trade_day(date):
     data2 = http_spider(url_template2%date)
     return len(data)>=1200 or len(data2)>=1200
 
-<<<<<<< HEAD
-def spider_trade_day(range=360):
-=======
+
 def spider_trade_day(range=300):
->>>>>>> 676a11505ee8be241cd3a4f0fecb92980958079f
     today = datetime.datetime.now()
     oneday = datetime.timedelta(days=1)
     today += oneday
