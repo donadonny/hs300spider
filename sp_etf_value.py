@@ -43,7 +43,6 @@ def handle_day_detail_data(stock_name,data):
             r["unit_net_chng_pct"],
             r["growth_rate"]
         )
-        print sql
         db.exeSQL(sql)
         
     

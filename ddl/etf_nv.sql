@@ -15,11 +15,40 @@ CREATE TABLE IF NOT EXISTS `etf_nv` (
 sql_template = '''
 insert into etf_nv values(
 	%d,	#ID
-	%s,	#date
+	'%s',	#date
 	%f,	#accum_net
 	%f,	#unit_net
 	%f,	#unit_net_chng_pct
-	%f	growth_rate
+	'%s'	#growth_rate
 );
 '''
-{"his_nav_list": [{"accum_net": 2.0840000000000001, "unit_net": 1.512, "unit_net_chng_pct": 2.3696999999999999, "tradedate_display2": "2014-01-22", "_id": 7409536210, "growth_rate": "2.37"}]}
+
+
+create table IF NOT EXISTS `summary`(
+  `id` int unsigned NOT NULL,
+  `date` varchar(12) NOT NULL,
+  `high_price` FLOAT NOT NULL DEFAULT '0.0',
+  `low_price` FLOAT NOT NULL DEFAULT '0.0',
+  `open_price` FLOAT NOT NULL DEFAULT '0.0',
+  `close_price` FLOAT NOT NULL DEFAULT '0.0',
+  `last_close_price` FLOAT NOT NULL DEFAULT '0.0',
+  `price_change` FLOAT NOT NULL DEFAULT '0.0',
+  `amount` FLOAT NOT NULL DEFAULT '0.0',
+  `volume` FLOAT NOT NULL DEFAULT '0.0',
+  PRIMARY KEY (`id`,`date`)
+);
+
+sql_template = '''
+insert into summary values(
+	%d,	#ID
+	'%s',	#date
+	%f,	#high_price
+	%f,	#low_price
+	%f,	#open_price
+	%f,	#close_price
+	%f,	#last_close_price
+	%f,	#price_change
+	%f,	#amount
+	%f	#volume
+);
+'''
