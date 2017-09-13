@@ -165,14 +165,16 @@ class TaskBarIcon(wx.TaskBarIcon):
 
 class XFrame(wx.Frame):
     def __init__(self,parent=None):
-        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=u"测试定时器的小程序", pos=wx.DefaultPosition, size=wx.Size(483, 155),
-                      style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
+        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=u"xNotify",
+                          pos=wx.DefaultPosition, size=wx.Size(256, 256),
+                          style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
         # 创建定时器
-
-        self.timer = wx.Timer(self)  # 创建定时器
+        self.timer = wx.Timer(self)
+        # 计数器
         self.counter = 0
-        self.Bind(wx.EVT_TIMER, self.OnTimer, self.timer)  # 绑定一个定时器事件
-        #三秒钟刷新一次
+        # 绑定一个定时器事件
+        self.Bind(wx.EVT_TIMER, self.OnTimer, self.timer)
+        #定时刷新一次
         self.timer.Start(gSleepTime)
 
     def OnTimer(self, evt):  # 显示时间事件处理函数
