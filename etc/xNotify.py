@@ -37,6 +37,7 @@ def spider(code):
     content = content.decode('gbk')
     idx = content.find('"')
     msg = content[idx+1:-3].split(',')
+    code = msg[0]
     name = msg[1][:4]
     rate = msg[8]
 
@@ -54,8 +55,12 @@ def generate_icon(stock_idx):
         return None
 
     #修改比例，这里放大5倍
-    rate = int(float(rate)*dratio)
-    idx = rate
+    if  float(rate)>=0:
+        nrate = int(float(rate)*dratio)
+    else:
+        nrate = - int(-float(rate)*dratio) -1
+
+    idx = nrate
     if idx >=9 : idx = 9
     if idx <=-10 : idx = -10
 
@@ -65,7 +70,7 @@ def generate_icon(stock_idx):
         idx = idx+20
 
 
-    print name,display_name, rate, 'idx : ', idx
+    print code,display_name, rate, 'idx : ', idx
 
 
     bmp = wx.EmptyBitmap(256, 256)
@@ -86,7 +91,7 @@ def generate_icon(stock_idx):
     font.SetPointSize(fn)
     dc.SetFont(font)
     dc.SetTextForeground(c[idx])
-    dc.DrawText(display_name, (256 - fn) / 2 + 18, (256 - fn) / 2 - 12)
+    dc.DrawText(display_name, (256 - fn) / 2 + 14, (256 - fn) / 2 - 12)
 
 
     #绘制周边20个圆
@@ -126,6 +131,30 @@ def generate_icon(stock_idx):
     dc.SetPen(wx.Pen(color, style=wx.TRANSPARENT))
     dc.SetBrush(wx.Brush(color, wx.SOLID))
     dc.DrawCircle(px[idx], py[idx], 20)
+
+    def h((x1,y1),(x2,y2),r=0.5):
+        return (x1+ (x2-x1)*r),(y1+ (y2-y1)*r)
+
+    #---DrawPolygon
+    p1 = h((128,128),(px[idx], py[idx]),0.15)
+    p3 = h((128,128),(px[idx], py[idx]),0.80)
+
+    p31 = (px[(idx-1)%20],py[(idx-1)%20])
+    p32 = (px[(idx + 1) % 20], py[(idx + 1) % 20])
+
+    p31 = h((128,128),p31,0.6)
+    p32 = h((128, 128), p32, 0.6)
+
+    p5 = h(p31,p32,0.5)
+
+    p2 = h(p5,p31,0.5)
+    p4 = h(p5,p32,0.5)
+
+    #print p1,p2,p3,p4
+    color = wx.Colour(100,149,237)
+    dc.SetPen(wx.Pen(color, style=wx.TRANSPARENT))
+    dc.SetBrush(wx.Brush(color, wx.SOLID))
+    dc.DrawPolygon([p1,p2,p3,p4])
 
     dc.EndDrawing()
     dc.SelectObject(wx.NullBitmap)
